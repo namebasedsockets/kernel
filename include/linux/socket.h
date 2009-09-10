@@ -2,9 +2,9 @@
 #define _LINUX_SOCKET_H
 
 /*
- * Desired design of maximum size and alignment (see RFC2553)
+ * Desired design of maximum size and alignment (see RFC1034)
  */
-#define _K_SS_MAXSIZE	128	/* Implementation specific max size */
+#define _K_SS_MAXSIZE	(254 + 2 * sizeof(unsigned short))	/* Implementation specific max size */
 #define _K_SS_ALIGNSIZE	(__alignof__ (struct sockaddr *))
 				/* Implementation specific desired alignment */
 
