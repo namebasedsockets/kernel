@@ -2,7 +2,7 @@ VERSION = 2
 PATCHLEVEL = 6
 SUBLEVEL = 28
 EXTRAVERSION =
-NAME = Erotic Pickled Herring
+NAME = Erotic Pickled Herring - Name-based sockets + MPTCP
 
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
