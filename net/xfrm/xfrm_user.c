@@ -26,6 +26,7 @@
 #include <net/sock.h>
 #include <net/xfrm.h>
 #include <net/netlink.h>
+#include <net/ip6_route.h>
 #include <asm/uaccess.h>
 #if defined(CONFIG_IPV6) || defined(CONFIG_IPV6_MODULE)
 #include <linux/in6.h>
@@ -92,7 +93,7 @@ static inline int verify_sec_ctx_len(struct nlattr **attrs)
 	struct nlattr *rt = attrs[XFRMA_SEC_CTX];
 	struct xfrm_user_sec_ctx *uctx;
 
-	if (!rt)
+	if (!rt) 
 		return 0;
 
 	uctx = nla_data(rt);
@@ -169,7 +170,7 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 			goto out;
 		break;
 #endif
-
+		
 	default:
 		goto out;
 	}
@@ -184,7 +185,7 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 		goto out;
 	if ((err = verify_sec_ctx_len(attrs)))
 		goto out;
-
+	
 	err = -EINVAL;
 	switch (p->mode) {
 	case XFRM_MODE_TRANSPORT:
@@ -443,7 +444,7 @@ static struct xfrm_state *xfrm_user_state_lookup(struct xfrm_usersa_id *p,
 		x = xfrm_state_lookup(&p->daddr, p->spi, p->proto, p->family);
 	} else {
 		xfrm_address_t *saddr = NULL;
-
+		
 		verify_one_addr(attrs, XFRMA_SRCADDR, &saddr);
 		if (!saddr) {
 			err = -EINVAL;
@@ -1119,6 +1120,7 @@ static int xfrm_add_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
 	u32 sessionid = NETLINK_CB(skb).sessionid;
 	u32 sid = NETLINK_CB(skb).sid;
 
+
 	err = verify_newpolicy_info(p);
 	if (err)
 		return err;
@@ -1137,6 +1139,7 @@ static int xfrm_add_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
 	excl = nlh->nlmsg_type == XFRM_MSG_NEWPOLICY;
 	err = xfrm_policy_insert(p->dir, xp, excl);
 	xfrm_audit_policy_add(xp, err ? 0 : 1, loginuid, sessionid, sid);
+
 
 	if (err) {
 		security_xfrm_policy_free(xp->security);
@@ -2029,6 +2032,7 @@ static int build_expire(struct sk_buff *skb, struct xfrm_state *x, struct km_eve
 	ue->hard = (c->data.hard != 0) ? 1 : 0;
 
 	return nlmsg_end(skb, nlh);
+
 }
 
 static int xfrm_exp_state_notify(struct xfrm_state *x, struct km_event *c)

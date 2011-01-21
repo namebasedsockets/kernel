@@ -4722,7 +4722,7 @@ do_wait_for_common(struct completion *x, long timeout, int state)
 
 static long __sched
 wait_for_common(struct completion *x, long timeout, int state)
-{
+{	
 	might_sleep();
 
 	spin_lock_irq(&x->wait.lock);
@@ -8357,6 +8357,7 @@ void __might_sleep(char *file, int line)
 		"in_atomic(): %d, irqs_disabled(): %d, pid: %d, name: %s\n",
 			in_atomic(), irqs_disabled(),
 			current->pid, current->comm);
+	BUG();
 
 	debug_show_held_locks(current);
 	if (irqs_disabled())
