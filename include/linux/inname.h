@@ -8,7 +8,7 @@
 #ifndef LINUX_INNAME_H
 #define LINUX_INNAME_H
 
-/* According to RFC1034, the maximum number of octets of a transmitted name is
+/** According to RFC1034, the maximum number of octets of a transmitted name is
  * 255.  Assuming at least one preceding length octet and one terminating
  * length octet of 0, this implies the maximum text length of domain name is
  * 253 bytes, or 254 bytes with a NULL terminator.
