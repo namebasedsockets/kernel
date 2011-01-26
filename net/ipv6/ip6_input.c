@@ -60,8 +60,10 @@ int ipv6_rcv(struct sk_buff *skb, struct net_device *dev, struct packet_type *pt
 	u32 		pkt_len;
 	struct inet6_dev *idev;
 	struct net *net = dev_net(skb->dev);
+	const unsigned char *nh = skb_network_header(skb);
 
-	printk(KERN_DEBUG "%s:%s:%d  \n", __FILE__,  __FUNCTION__, __LINE__);
+	printk(KERN_DEBUG "%s:%s:%d skb->sk = %p \n", __FILE__, __FUNCTION__, __LINE__, skb->sk);
+
 
 	if (skb->pkt_type == PACKET_OTHERHOST) {
 		kfree_skb(skb);
@@ -167,6 +169,8 @@ static int ip6_input_finish(struct sk_buff *skb)
 	struct inet6_dev *idev;
 	struct net *net = dev_net(skb->dst->dev);
 
+	printk(KERN_DEBUG "%s:%s:%d skb->sk = %p \n", __FILE__, __FUNCTION__, __LINE__, skb->sk);
+
 	/*
 	 *	Parse extension headers
 	 */
@@ -237,6 +241,8 @@ discard:
 
 int ip6_input(struct sk_buff *skb)
 {
+	printk(KERN_DEBUG "%s:%s:%d skb->sk = %p \n", __FILE__, __FUNCTION__, __LINE__, skb->sk);
+
 	return NF_HOOK(PF_INET6, NF_INET_LOCAL_IN, skb, skb->dev, NULL,
 		       ip6_input_finish);
 }
@@ -245,7 +251,6 @@ int ip6_mc_input(struct sk_buff *skb)
 {
 	struct ipv6hdr *hdr;
 	int deliver;
-	printk(KERN_DEBUG "%s:%d  \n", __FUNCTION__, __LINE__);
 
 	IP6_INC_STATS_BH(dev_net(skb->dst->dev),
 			 ip6_dst_idev(skb->dst), IPSTATS_MIB_INMCASTPKTS);
