@@ -150,6 +150,8 @@ _decode_session6(struct sk_buff *skb, struct flowi *fl, int reverse)
 	const unsigned char *nh = skb_network_header(skb);
 	u8 nexthdr = nh[IP6CB(skb)->nhoff];
 
+	printk(KERN_DEBUG "%s:%s:%d  \n", __FILE__,  __FUNCTION__, __LINE__);
+
 	memset(fl, 0, sizeof(struct flowi));
 	ipv6_addr_copy(&fl->fl6_dst, reverse ? &hdr->saddr : &hdr->daddr);
 	ipv6_addr_copy(&fl->fl6_src, reverse ? &hdr->daddr : &hdr->saddr);
@@ -162,6 +164,8 @@ _decode_session6(struct sk_buff *skb, struct flowi *fl, int reverse)
 		case NEXTHDR_ROUTING:
 		case NEXTHDR_HOP:
 		case NEXTHDR_DEST:
+			printk(KERN_DEBUG "%s:%s:%d  Found nexthdr:%d\n", __FILE__,  __FUNCTION__, __LINE__, nexthdr);
+
 			offset += ipv6_optlen(exthdr);
 			nexthdr = exthdr->nexthdr;
 			exthdr = (struct ipv6_opt_hdr *)(nh + offset);
