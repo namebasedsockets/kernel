@@ -90,6 +90,7 @@ ipv6header_mt6(const struct sk_buff *skb, const struct xt_match_param *par)
 			temp |= MASK_AH;
 			break;
 		case NEXTHDR_DEST:
+			printk(KERN_DEBUG "%s:%s:%d NEXTHDR_DEST SWITCH() CASE \n", __FILE__,  __FUNCTION__, __LINE__);
 			temp |= MASK_DSTOPTS;
 			break;
 		default:
