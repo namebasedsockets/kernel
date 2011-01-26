@@ -61,6 +61,8 @@ int ipv6_rcv(struct sk_buff *skb, struct net_device *dev, struct packet_type *pt
 	struct inet6_dev *idev;
 	struct net *net = dev_net(skb->dev);
 
+	printk(KERN_DEBUG "%s:%s:%d  \n", __FILE__,  __FUNCTION__, __LINE__);
+
 	if (skb->pkt_type == PACKET_OTHERHOST) {
 		kfree_skb(skb);
 		return 0;
