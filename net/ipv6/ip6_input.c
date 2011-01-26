@@ -243,6 +243,7 @@ int ip6_mc_input(struct sk_buff *skb)
 {
 	struct ipv6hdr *hdr;
 	int deliver;
+	printk(KERN_DEBUG "%s:%d  \n", __FUNCTION__, __LINE__);
 
 	IP6_INC_STATS_BH(dev_net(skb->dst->dev),
 			 ip6_dst_idev(skb->dst), IPSTATS_MIB_INMCASTPKTS);

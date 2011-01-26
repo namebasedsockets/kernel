@@ -10,6 +10,7 @@
 
 int ipv6_ext_hdr(u8 nexthdr)
 {
+	printk(KERN_DEBUG "%s:%d  \n", __FUNCTION__, __LINE__);
 	/*
 	 * find out if nexthdr is an extension header or a protocol
 	 */
