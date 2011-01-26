@@ -184,14 +184,14 @@ resubmit:
 	nexthdr = skb_network_header(skb)[nhoff];
 
 	raw = raw6_local_deliver(skb, nexthdr);
-
+	printk(KERN_DEBUG "%s:%s:%d raw: %d \n", __FILE__, __FUNCTION__, __LINE__, raw);
 	hash = nexthdr & (MAX_INET_PROTOS - 1);
 	if ((ipprot = rcu_dereference(inet6_protos[hash])) != NULL) {
 		int ret;
-
+		printk(KERN_DEBUG "%s:%s:%d if ipprot != NULL was true \n", __FILE__, __FUNCTION__, __LINE__);
 		if (ipprot->flags & INET6_PROTO_FINAL) {
 			struct ipv6hdr *hdr;
-
+			printk(KERN_DEBUG "%s:%s:%d if ipprot->flags & INET&_PROTO_FINAL\n", __FILE__, __FUNCTION__, __LINE__);
 			/* Free reference early: we don't need it any more,
 			   and it may hold ip_conntrack module loaded
 			   indefinitely. */
@@ -217,6 +217,7 @@ resubmit:
 			IP6_INC_STATS_BH(net, idev, IPSTATS_MIB_INDELIVERS);
 	} else {
 		if (!raw) {
+			printk(KERN_DEBUG "%s:%s:%d ipprot->flags & INET6_PROTO_FINAL : false  AND !raw\n", __FILE__, __FUNCTION__, __LINE__);
 			if (xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb)) {
 				IP6_INC_STATS_BH(net, idev,
 						 IPSTATS_MIB_INUNKNOWNPROTOS);
@@ -224,14 +225,17 @@ resubmit:
 					    ICMPV6_UNK_NEXTHDR, nhoff,
 					    skb->dev);
 			}
-		} else
+		} else {
+			printk(KERN_DEBUG "%s:%s:%d ipprot->flags & INET6_PROTO_FINAL : false  AND raw\n", __FILE__, __FUNCTION__, __LINE__);
 			IP6_INC_STATS_BH(net, idev, IPSTATS_MIB_INDELIVERS);
+		}
 		kfree_skb(skb);
 	}
 	rcu_read_unlock();
 	return 0;
 
 discard:
+	printk(KERN_DEBUG "%s:%s:%d discard!\n", __FILE__, __FUNCTION__, __LINE__);
 	IP6_INC_STATS_BH(net, idev, IPSTATS_MIB_INDISCARDS);
 	rcu_read_unlock();
 	kfree_skb(skb);

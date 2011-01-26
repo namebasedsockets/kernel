@@ -225,8 +225,9 @@ out:
 int raw6_local_deliver(struct sk_buff *skb, int nexthdr)
 {
 	struct sock *raw_sk;
-
+	printk(KERN_DEBUG "%s:%s:%d skb->sk = %p \n", __FILE__, __FUNCTION__, __LINE__, skb->sk);
 	raw_sk = sk_head(&raw_v6_hashinfo.ht[nexthdr & (MAX_INET_PROTOS - 1)]);
+	printk(KERN_DEBUG "%s:%s:%d raw_sk: %p \n", __FILE__, __FUNCTION__, __LINE__, raw_sk);
 	if (raw_sk && !ipv6_raw_deliver(skb, nexthdr))
 		raw_sk = NULL;
 
