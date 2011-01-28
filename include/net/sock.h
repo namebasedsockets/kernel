@@ -57,6 +57,40 @@
 #include <net/dst.h>
 #include <net/checksum.h>
 
+
+/*
+ *  FIXME: Move this someplace more fitting, make the define a proper build option
+ */
+
+#define NAMEBASEDSOCETS
+
+#ifdef NAMEBASEDSOCKETS
+struct callback {
+	void (*f)(sk_buff *skb, void *data);
+	void *data;
+};
+
+struct callback* alloc_callback() 
+{
+	struct callback *cb;
+
+	if (!(cb = kmalloc(sizeof(struct callback), GFP_ATOMIC))
+		goto error;
+	return cb;
+
+error:
+	BUG_ON(1); // FIXME: Do proper error handling 
+	return 0;
+}
+
+void destroy_callback(struct callback *cb)
+{
+	kfree(cb);
+}
+
+#endif
+
+
 /*
  * This structure really needs to be cleaned up.
  * Most of it is for TCP, and not used by any of
@@ -279,6 +313,13 @@ struct sock {
   	int			(*sk_backlog_rcv)(struct sock *sk,
 						  struct sk_buff *skb);  
 	void                    (*sk_destruct)(struct sock *sk);
+
+#ifdef NAMEBASEDSOCKETS
+	struct callback *sk_on_rcv_start;
+	struct callback *sk_on_rcv_finish;
+	struct callback *sk_on_snd_start;
+	struct callback *sk_on_snd_finish;
+#endif
 };
 
 /*

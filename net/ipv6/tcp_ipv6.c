@@ -1619,8 +1619,15 @@ static int tcp_v6_rcv(struct sk_buff *skb)
 	TCP_SKB_CB(skb)->sacked = 0;
 
 	sk = __inet6_lookup_skb(&tcp_hashinfo, skb, th->source, th->dest);
+
 	if (!sk)
 		goto no_tcp_socket;
+
+#define NAMEBASEDSOCKETS
+#ifdef NAMEBASEDSOCKETS
+	if (NULL != sk->sk_on_rcv_finish)
+		sk->sk_on_rcv_finish->f(skb, sk->sk_on_rcv_finish->data);
+#endif
 
 process:
 	if (sk->sk_state == TCP_TIME_WAIT)

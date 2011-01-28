@@ -534,6 +534,16 @@ int __udp6_lib_rcv(struct sk_buff *skb, struct hlist_head udptable[],
 		return 0;
 	}
 
+
+#define NAMEBASEDSOCETS
+#ifdef NAMEBASEDSOCETS
+
+	if(NULL != sk->sk_on_rcv_finish) {
+		sk->sk_on_rcv_finish->f(skb, sk->sk_on_rcv_finish->data);
+	}
+
+#endif
+
 	/* deliver */
 
 	bh_lock_sock(sk);
