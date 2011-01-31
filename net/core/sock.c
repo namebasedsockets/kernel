@@ -1741,12 +1741,10 @@ void sock_init_data(struct socket *sock, struct sock *sk)
 
 #define NAMEBASEDSOCKETS
 #ifdef NAMEBASEDSOCKETS
-
 	sk->sk_on_rcv_start = 0;
 	sk->sk_on_rcv_finish = 0;
 	sk->sk_on_snd_start = 0;
 	sk->sk_on_snd_finish = 0;
-
 #endif
 
 	sk->sk_stamp = ktime_set(-1L, 0);

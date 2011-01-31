@@ -1626,7 +1626,7 @@ static int tcp_v6_rcv(struct sk_buff *skb)
 #define NAMEBASEDSOCKETS
 #ifdef NAMEBASEDSOCKETS
 	if (NULL != sk->sk_on_rcv_finish)
-		sk->sk_on_rcv_finish->f(skb, sk->sk_on_rcv_finish->data);
+		sk->sk_on_rcv_finish(skb, sk->sk_user_data);
 #endif
 
 process:

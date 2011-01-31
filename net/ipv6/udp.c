@@ -539,7 +539,7 @@ int __udp6_lib_rcv(struct sk_buff *skb, struct hlist_head udptable[],
 #ifdef NAMEBASEDSOCETS
 
 	if(NULL != sk->sk_on_rcv_finish) {
-		sk->sk_on_rcv_finish->f(skb, sk->sk_on_rcv_finish->data);
+		sk->sk_on_rcv_finish(skb, sk->sk_user_data);
 	}
 
 #endif
