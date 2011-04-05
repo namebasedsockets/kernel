@@ -282,11 +282,12 @@ struct sock {
 						  struct sk_buff *skb);  
 	void                    (*sk_destruct)(struct sock *sk);
 
+#define NAMEBASEDSOCKETS
 #ifdef NAMEBASEDSOCKETS
-	void (*sk_on_rcv_start)(struct sock skb, void *data);
-	void (callback *sk_on_rcv_finish)(struct sock skb, void *data);
-	void (*sk_on_snd_start)(struct sock skb, void *data);
-	void (*sk_on_snd_finish)(struct sock skb, void *data);
+	void (*sk_on_rcv_start)(struct sk_buff *skb, void *data);
+	void (*sk_on_rcv_finish)(struct sk_buff *skb, void *data);
+	void (*sk_on_snd_start)(struct sk_buff *skb, void *data);
+	void (*sk_on_snd_finish)(struct sk_buff *skb, void *data);
 #endif
 };
 

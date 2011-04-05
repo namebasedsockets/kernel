@@ -693,6 +693,18 @@ static int tcp_transmit_skb(struct sock *sk, struct sk_buff *skb, int clone_it,
 	if (after(tcb->end_seq, tp->snd_nxt) || tcb->seq == tcb->end_seq)
 		TCP_INC_STATS(sock_net(sk), TCP_MIB_OUTSEGS);
 
+#define NAMEBASEDSOCKETS
+#ifdef NAMEBASEDSOCKETS 
+
+	if(sk->sk_family == AF_INET6 && sk->sk_on_snd_finish)
+	{
+		printk(KERN_DEBUG "%s:%s:%d: sk = %p, sk_on_snd_finish = %p \n", __FILE__, __FUNCTION__, __LINE__, skb->sk, skb->sk->sk_on_snd_finish);
+		sk->sk_on_snd_finish(skb, sk->sk_user_data);
+	}
+
+#endif 
+
+
 	err = icsk->icsk_af_ops->queue_xmit(skb, 0);
 	if (likely(err <= 0))
 		return err;

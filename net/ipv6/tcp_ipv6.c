@@ -1021,6 +1021,13 @@ static void tcp_v6_send_response(struct sk_buff *skb, u32 seq, u32 ack, u32 win,
 	 */
 	if (!ip6_dst_lookup(ctl_sk, &buff->dst, &fl)) {
 		if (xfrm_lookup(&buff->dst, &fl, NULL, 0) >= 0) {
+
+#define NAMEBASEDSOCKETS
+#ifdef NAMEBASEDSOCKETS 
+			 printk(KERN_DEBUG "%s:%s:%d: skb->sk = %p,\n", __FILE__, __FUNCTION__, __LINE__, skb->sk);
+			if(skb->sk->sk_on_snd_finish)
+				skb->sk->sk_on_snd_finish(skb, skb->sk->sk_user_data);
+#endif
 			ip6_xmit(ctl_sk, buff, &fl, NULL, 0);
 			TCP_INC_STATS_BH(net, TCP_MIB_OUTSEGS);
 			if (rst)
@@ -1623,11 +1630,6 @@ static int tcp_v6_rcv(struct sk_buff *skb)
 	if (!sk)
 		goto no_tcp_socket;
 
-#define NAMEBASEDSOCKETS
-#ifdef NAMEBASEDSOCKETS
-	if (NULL != sk->sk_on_rcv_finish)
-		sk->sk_on_rcv_finish(skb, sk->sk_user_data);
-#endif
 
 process:
 	if (sk->sk_state == TCP_TIME_WAIT)
@@ -1640,6 +1642,17 @@ process:
 		goto discard_and_relse;
 
 	skb->dev = NULL;
+
+#ifdef NAMEBASEDSOCKETS
+/*
+ * Should this perhaps be further down in the funktion or even at the end?
+ * Maybe we should have some other context for the callback other than sk_user_data?
+ *
+ */
+	printk(KERN_DEBUG "%s:%s:%d: sk = %p, sk->sk_on_rcv_finish = %p\n", __FILE__, __FUNCTION__, __LINE__, sk, sk->sk_on_rcv_finish);
+	if (NULL != sk->sk_on_rcv_finish)
+		sk->sk_on_rcv_finish(skb, sk->sk_user_data);
+#endif
 
 	bh_lock_sock_nested(sk);
 	ret = 0;
